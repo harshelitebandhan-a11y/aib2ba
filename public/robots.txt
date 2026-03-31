@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://aib2bautomation.com/sitemap.xml
