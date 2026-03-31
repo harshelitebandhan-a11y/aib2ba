@@ -1,82 +1,80 @@
 import { Link } from 'react-router-dom'
 import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube } from 'lucide-react'
 
-const V = { ink:'#0A0A0A', ink3:'#7A7A7A', ink4:'#B8B8B8', rule:'#E2E2E2', blue:'#1B4FD8', bg2:'#F7F7F5' }
-
-const COLS = {
-  Product:   [{ to:'/services/lead-enrichment', label:'Lead Enrichment' },{ to:'/services/marketing-automation', label:'Marketing Automation' },{ to:'/services/campaign-management', label:'Campaign Management' },{ to:'/pricing', label:'Pricing' }],
-  Solutions: [{ to:'/solutions', label:'Enterprise Sales' },{ to:'/solutions', label:'E-commerce Growth' },{ to:'/solutions', label:'SaaS Success' },{ to:'/case-studies', label:'Case Studies' }],
-  Company:   [{ to:'/about', label:'About Us' },{ to:'/blog', label:'Blog' },{ to:'/contact', label:'Contact' },{ to:'/privacy', label:'Privacy Policy' },{ to:'/terms', label:'Terms of Service' }],
+const COLS={
+  Product:[{to:'/services/lead-enrichment',label:'Lead Enrichment'},{to:'/services/marketing-automation',label:'Marketing Automation'},{to:'/services/campaign-management',label:'Campaign Management'},{to:'/pricing',label:'Pricing'}],
+  Solutions:[{to:'/solutions',label:'Enterprise Sales'},{to:'/solutions',label:'E-commerce Growth'},{to:'/solutions',label:'SaaS Success'},{to:'/case-studies',label:'Case Studies'}],
+  Company:[{to:'/about',label:'About Us'},{to:'/blog',label:'Blog'},{to:'/contact',label:'Contact'},{to:'/privacy',label:'Privacy Policy'},{to:'/terms',label:'Terms of Service'}],
 }
 
 export default function Footer() {
-  const yr = new Date().getFullYear()
+  const yr=new Date().getFullYear()
   return (
-    <footer role="contentinfo" style={{ background:V.bg2, borderTop:`1px solid ${V.rule}`, fontFamily:"'DM Sans',system-ui,sans-serif" }}>
-      {/* CTA bar */}
-      <div style={{ background:V.ink, padding:'40px', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:24 }}>
+    <footer role="contentinfo">
+      <style>{`
+        .footer-cta{background:#0A0A0A;padding:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+        .footer-cta-h{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(20px,3vw,30px);font-weight:400;color:#fff;letter-spacing:-.03em;margin-bottom:6px}
+        .footer-main{background:#F7F7F5;border-top:1px solid #E2E2E2}
+        .footer-grid{max-width:1280px;margin:0 auto;padding:48px 40px 36px;display:grid;grid-template-columns:1fr repeat(3,auto);gap:40px}
+        .footer-bottom{max-width:1280px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #E2E2E2;flex-wrap:wrap;gap:12px}
+        .footer-col-title{font-size:11px;font-weight:700;color:#B8B8B8;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+        .footer-link{font-size:13px;color:#7A7A7A;display:block;margin-bottom:9px;transition:color .15s}
+        .footer-link:hover{color:#0A0A0A}
+        .footer-tagline{font-size:13px;color:#7A7A7A;line-height:1.7;max-width:240px;margin-bottom:18px}
+        .footer-contact-item{display:flex;align-items:center;gap:8px;font-size:13px;color:#7A7A7A;margin-bottom:7px}
+        .footer-social{width:30px;height:30px;border:1px solid #E2E2E2;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;color:#B8B8B8;transition:color .15s,border-color .15s}
+        .footer-social:hover{color:#0A0A0A;border-color:#0A0A0A}
+        @media(max-width:860px){
+          .footer-cta{padding:32px 20px}
+          .footer-grid{grid-template-columns:1fr 1fr;padding:36px 20px 28px;gap:28px}
+          .footer-bottom{padding:16px 20px}
+        }
+        @media(max-width:480px){
+          .footer-grid{grid-template-columns:1fr}
+        }
+      `}</style>
+
+      <div className="footer-cta">
         <div>
-          <div style={{ fontFamily:"'Instrument Serif',Georgia,serif", fontSize:'clamp(22px,3vw,32px)', fontWeight:400, color:'#fff', letterSpacing:'-.03em', marginBottom:8 }}>
-            Ready to transform your pipeline?
-          </div>
-          <p style={{ fontSize:14, color:'rgba(255,255,255,.5)' }}>Start free for 14 days — no credit card, no commitment.</p>
+          <div className="footer-cta-h">Ready to transform your pipeline?</div>
+          <p style={{fontSize:14,color:'rgba(255,255,255,.5)'}}>Start free for 14 days — no credit card, no commitment.</p>
         </div>
-        <Link to="/contact" className="btn-white" style={{ flexShrink:0 }}>Book a free demo →</Link>
+        <Link to="/contact" className="btn-white" style={{flexShrink:0}}>Book a free demo →</Link>
       </div>
 
-      {/* Main grid */}
-      <div style={{ maxWidth:1280, margin:'0 auto', padding:'56px 40px 40px', display:'grid', gridTemplateColumns:'1fr repeat(3,auto)', gap:48, alignItems:'start' }}>
-        {/* Brand */}
-        <div>
-          <Link to="/" style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16 }}>
-            <div style={{ width:26, height:26, background:V.ink, borderRadius:6, display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:13, fontWeight:700 }}>A</div>
-            <span style={{ fontSize:15, fontWeight:700, color:V.ink, letterSpacing:'-.02em' }}>AIB2B Automation</span>
-          </Link>
-          <p style={{ fontSize:13, color:V.ink3, lineHeight:1.7, maxWidth:260, marginBottom:20 }}>
-            We help B2B revenue teams stop wasting time on bad leads and start closing the deals that actually move the number.
-          </p>
-          <div style={{ display:'flex', flexDirection:'column', gap:8, marginBottom:20 }}>
-            <a href="mailto:hello@aib2bautomation.com" style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, color:V.ink3, transition:'color .15s' }}><Mail size={14}/> hello@aib2bautomation.com</a>
-            <span style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, color:V.ink3 }}><Phone size={14}/> +1 (555) 123-4567</span>
-            <span style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, color:V.ink3 }}><MapPin size={14}/> San Francisco, CA</span>
+      <div className="footer-main">
+        <div className="footer-grid">
+          <div>
+            <Link to="/" style={{display:'flex',alignItems:'center',gap:8,marginBottom:14,textDecoration:'none'}}>
+              <div style={{width:24,height:24,background:'#0A0A0A',borderRadius:5,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:12,fontWeight:700}}>A</div>
+              <span style={{fontSize:14,fontWeight:700,color:'#0A0A0A',letterSpacing:'-.02em'}}>AIB2B Automation</span>
+            </Link>
+            <p className="footer-tagline">We help B2B revenue teams stop wasting time on bad leads and start closing the deals that actually move the number.</p>
+            <div style={{marginBottom:16}}>
+              <a href="mailto:hello@aib2bautomation.com" className="footer-contact-item"><Mail size={13}/>hello@aib2bautomation.com</a>
+              <div className="footer-contact-item"><Phone size={13}/>+1 (555) 123-4567</div>
+              <div className="footer-contact-item"><MapPin size={13}/>San Francisco, CA</div>
+            </div>
+            <div style={{display:'flex',gap:8}}>
+              {[{I:Linkedin,l:'LinkedIn'},{I:Twitter,l:'Twitter'},{I:Youtube,l:'YouTube'}].map(({I,l})=>(
+                <a key={l} href="#" aria-label={l} className="footer-social"><I size={13}/></a>
+              ))}
+            </div>
           </div>
-          <div style={{ display:'flex', gap:12 }}>
-            {[{ Icon:Linkedin, label:'LinkedIn' },{ Icon:Twitter, label:'Twitter' },{ Icon:Youtube, label:'YouTube' }].map(({ Icon, label }) => (
-              <a key={label} href="#" aria-label={label} style={{ width:32, height:32, border:`1px solid ${V.rule}`, borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center', color:V.ink4, transition:'color .15s, border-color .15s' }}
-                onMouseOver={e=>{e.currentTarget.style.color=V.ink;e.currentTarget.style.borderColor=V.ink}}
-                onMouseOut={e=>{e.currentTarget.style.color=V.ink4;e.currentTarget.style.borderColor=V.rule}}>
-                <Icon size={14}/>
-              </a>
+          {Object.entries(COLS).map(([group,links])=>(
+            <div key={group}>
+              <div className="footer-col-title">{group}</div>
+              {links.map(l=><Link key={l.label} to={l.to} className="footer-link">{l.label}</Link>)}
+            </div>
+          ))}
+        </div>
+        <div className="footer-bottom">
+          <span style={{fontSize:12,color:'#B8B8B8'}}>© {yr} AIB2B Automation, Inc. All rights reserved.</span>
+          <div style={{display:'flex',gap:18}}>
+            {[{to:'/privacy',l:'Privacy'},{to:'/terms',l:'Terms'}].map(x=>(
+              <Link key={x.l} to={x.to} style={{fontSize:12,color:'#B8B8B8',transition:'color .15s'}} onMouseOver={e=>e.target.style.color='#0A0A0A'} onMouseOut={e=>e.target.style.color='#B8B8B8'}>{x.l}</Link>
             ))}
           </div>
-        </div>
-
-        {/* Link columns */}
-        {Object.entries(COLS).map(([group, links]) => (
-          <div key={group}>
-            <div style={{ fontSize:11, fontWeight:700, color:V.ink4, letterSpacing:'.1em', textTransform:'uppercase', marginBottom:16 }}>{group}</div>
-            <ul style={{ listStyle:'none', display:'flex', flexDirection:'column', gap:10 }}>
-              {links.map(l => (
-                <li key={l.label}>
-                  <Link to={l.to} style={{ fontSize:13, color:V.ink3, transition:'color .15s' }}
-                    onMouseOver={e=>e.target.style.color=V.ink} onMouseOut={e=>e.target.style.color=V.ink3}>
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      {/* Bottom */}
-      <div style={{ maxWidth:1280, margin:'0 auto', padding:'20px 40px', display:'flex', alignItems:'center', justifyContent:'space-between', borderTop:`1px solid ${V.rule}`, flexWrap:'wrap', gap:12 }}>
-        <span style={{ fontSize:12, color:V.ink4 }}>© {yr} AIB2B Automation, Inc. All rights reserved.</span>
-        <div style={{ display:'flex', gap:20 }}>
-          {[{ to:'/privacy', l:'Privacy' },{ to:'/terms', l:'Terms' }].map(x=>(
-            <Link key={x.l} to={x.to} style={{ fontSize:12, color:V.ink4, transition:'color .15s' }}
-              onMouseOver={e=>e.target.style.color=V.ink} onMouseOut={e=>e.target.style.color=V.ink4}>{x.l}</Link>
-          ))}
         </div>
       </div>
     </footer>

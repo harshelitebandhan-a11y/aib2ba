@@ -40,7 +40,7 @@ export default function ServiceDetail({ service: s }) {
       </section>
       {/* FEATURES */}
       {s.features&&(
-        <section style={{padding:'72px 40px',borderBottom:`1px solid ${V.rule}`}}>
+        <section style={{padding:'72px var(--px)',borderBottom:`1px solid ${V.rule}`}}>
           <div style={{maxWidth:1280,margin:'0 auto'}}>
             <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:40,borderBottom:`1px solid ${V.rule}`,paddingBottom:32,marginBottom:48}}>
               <div>
@@ -61,7 +61,7 @@ export default function ServiceDetail({ service: s }) {
       )}
       {/* RESULTS */}
       {s.results&&(
-        <section style={{padding:'72px 40px',background:V.bg2,borderBottom:`1px solid ${V.rule}`}}>
+        <section style={{padding:'72px var(--px)',background:V.bg2,borderBottom:`1px solid ${V.rule}`}}>
           <div style={{maxWidth:1280,margin:'0 auto'}}>
             <div style={{fontSize:11,fontWeight:600,color:V.ink4,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:14}}>Expected results</div>
             <h2 style={{fontFamily:V.serif,fontSize:'clamp(28px,3.5vw,44px)',fontWeight:400,lineHeight:1.05,letterSpacing:'-.025em',marginBottom:48}}>What our clients typically <em style={{fontStyle:'italic',color:s.accent||V.blue}}>see in 90 days.</em></h2>
@@ -78,7 +78,7 @@ export default function ServiceDetail({ service: s }) {
         </section>
       )}
       {/* CTA */}
-      <div style={{padding:'72px 40px'}}>
+      <div style={{padding:'72px var(--px)'}}>
         <div style={{maxWidth:1280,margin:'0 auto',background:V.ink,borderRadius:16,padding:'64px 72px',display:'grid',gridTemplateColumns:'1fr auto',gap:48,alignItems:'center'}}>
           <div>
             <h2 style={{fontFamily:V.serif,fontSize:'clamp(28px,3.5vw,44px)',fontWeight:400,color:'white',lineHeight:1.1,letterSpacing:'-.03em',marginBottom:12}}>

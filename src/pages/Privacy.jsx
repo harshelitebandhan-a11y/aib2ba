@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useReveal } from "../hooks/useReveal"
 import { useSEO } from '../hooks/useSEO'
 const V={ink:'#0A0A0A',ink2:'#3A3A3A',ink3:'#7A7A7A',ink4:'#B8B8B8',blue:'#1B4FD8',blueLight:'#EEF2FF',rule:'#E2E2E2',bg:'#FFFFFF',bg2:'#F7F7F5',serif:"'Instrument Serif',Georgia,serif",sans:"'DM Sans',system-ui,sans-serif"}
 const SECTIONS=[
@@ -12,6 +13,7 @@ const SECTIONS=[
   {title:'8. Contact us',content:"For any privacy questions or requests, email us at privacy@aib2bautomation.com. You can also write to us at AIB2B Automation, Privacy Team, San Francisco, CA 94105."},
 ]
 export default function Privacy() {
+  useReveal()
   useSEO({title:'Privacy Policy | AIB2B Automation',description:'AIB2B Automation privacy policy. Learn how we collect, use, and protect your personal information. GDPR compliant, SOC 2 certified.',canonical:'https://aib2bautomation.com/privacy'})
   return (
     <div style={{fontFamily:V.sans,background:V.bg,color:V.ink}}>
