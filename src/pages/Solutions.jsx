@@ -1,25 +1,11 @@
 import { Link } from 'react-router-dom'
-import { useReveal } from "../hooks/useReveal"
+import { useReveal } from '../hooks/useReveal'
 import { useSEO } from '../hooks/useSEO'
-
-const V = {
-  ink: '#0A0A0A',
-  ink2: '#3A3A3A',
-  ink3: '#7A7A7A',
-  ink4: '#B8B8B8',
-  blue: '#1B4FD8',
-  blueLight: '#EEF2FF',
-  rule: '#E2E2E2',
-  bg: '#FFFFFF',
-  bg2: '#F7F7F5',
-  green: '#16A34A',
-  serif: "'Instrument Serif',Georgia,serif",
-  sans: "'DM Sans',system-ui,sans-serif"
-}
 
 const SOLUTIONS = [
   {
-    g: '⬡',
+    num: '01',
+    tag: 'ENTERPRISE',
     title: 'Enterprise Sales Acceleration',
     desc: 'Complete pipeline automation for large organisations with complex, multi-stakeholder buying cycles and long deal timelines.',
     features: [
@@ -27,14 +13,17 @@ const SOLUTIONS = [
       'Advanced lead scoring and routing',
       'Sales team performance analytics',
       'Custom CRM integrations',
-      'Enterprise-grade security and SSO'
+      'Enterprise-grade security and SSO',
     ],
-    result: 'Average 40% increase in qualified leads',
+    metric: 'Average 40% increase in qualified leads',
     industries: ['Technology', 'Manufacturing', 'Financial Services'],
-    accent: '#1B4FD8'
+    accent: '#175cd3',
+    accentLight: '#eff8ff',
+    accentBorder: '#bfdcff',
   },
   {
-    g: '◎',
+    num: '02',
+    tag: 'E-COMMERCE',
     title: 'E-commerce Growth Suite',
     desc: 'Specialised automation for online retailers looking to maximise acquisition, improve retention, and grow lifetime customer value.',
     features: [
@@ -42,14 +31,17 @@ const SOLUTIONS = [
       'Customer lifecycle automation',
       'Product recommendation engine',
       'Cross-sell and upsell campaigns',
-      'Inventory-based trigger marketing'
+      'Inventory-based trigger marketing',
     ],
-    result: 'Average 25% boost in conversion rates',
+    metric: 'Average 25% boost in conversion rates',
     industries: ['Retail', 'Fashion', 'Consumer Goods'],
-    accent: '#7C3AED'
+    accent: '#7f56d9',
+    accentLight: '#f4f3ff',
+    accentBorder: '#d9d6fe',
   },
   {
-    g: '⌬',
+    num: '03',
+    tag: 'SAAS',
     title: 'SaaS Customer Success',
     desc: 'End-to-end automation to reduce churn, drive expansion revenue, and improve net revenue retention — without adding headcount.',
     features: [
@@ -57,14 +49,17 @@ const SOLUTIONS = [
       'Usage-based trigger campaigns',
       'Churn prediction and prevention',
       'Expansion revenue workflows',
-      'Customer health scoring'
+      'Customer health scoring',
     ],
-    result: 'Average 30% reduction in churn rate',
+    metric: 'Average 30% reduction in churn rate',
     industries: ['SaaS', 'Software', 'Technology'],
-    accent: '#0891B2'
+    accent: '#0ba5ec',
+    accentLight: '#f0f9ff',
+    accentBorder: '#b9e6fe',
   },
   {
-    g: '◈',
+    num: '04',
+    tag: 'PROFESSIONAL SERVICES',
     title: 'Professional Services Growth',
     desc: 'Tailored automation for consultancies, agencies, and professional service firms that live and die by their relationship pipeline.',
     features: [
@@ -72,446 +67,188 @@ const SOLUTIONS = [
       'Client nurturing sequences',
       'Referral programme management',
       'Project-based marketing triggers',
-      'Thought leadership campaigns'
+      'Thought leadership campaigns',
     ],
-    result: 'Average 35% increase in qualified inquiries',
+    metric: 'Average 35% increase in qualified inquiries',
     industries: ['Consulting', 'Legal', 'Marketing Agencies'],
-    accent: V.green
+    accent: '#12b76a',
+    accentLight: '#ecfdf3',
+    accentBorder: '#abefc6',
   },
 ]
 
 const STEPS = [
   {
-    num: '01',
+    week: 'Step 01',
     title: 'Discovery and analysis',
-    body: 'We map your current processes, identify the bottlenecks that cost you the most revenue, and surface quick wins you can act on immediately.'
+    body: 'We map your current processes, identify the bottlenecks that cost you the most revenue, and surface quick wins you can act on immediately.',
   },
   {
-    num: '02',
+    week: 'Step 02',
     title: 'Strategy development',
-    body: 'A custom automation roadmap aligned with your specific goals and industry dynamics — not a generic best-practices document.'
+    body: 'A custom automation roadmap aligned with your specific goals and industry dynamics — not a generic best-practices document.',
   },
   {
-    num: '03',
+    week: 'Step 03',
     title: 'Implementation',
-    body: 'Seamless deployment with zero disruption to your existing operations. Most clients are live in 48 to 72 hours.'
+    body: 'Seamless deployment with zero disruption to your existing operations. Most clients are live in 48 to 72 hours.',
   },
   {
-    num: '04',
+    week: 'Step 04',
     title: 'Optimise and scale',
-    body: 'Continuous monitoring and monthly refinement sessions to compound your ROI over time. Every month should outperform the last.'
-  }
+    body: 'Continuous monitoring and monthly refinement sessions to compound your ROI over time. Every month should outperform the last.',
+  },
+]
+
+const COMPARE = [
+  ['Industry-specific workflow logic', 'Yes', 'Generic templates'],
+  ['Custom lead scoring per vertical', 'Yes', 'One-size-fits-all'],
+  ['Dedicated onboarding support', 'Yes', 'Self-serve only'],
+  ['CRM process integration', 'Yes', 'Usually separate'],
+  ['Fast implementation', 'Weeks', 'Months'],
+  ['Built for your GTM process', 'Yes', 'Mostly template-based'],
 ]
 
 export default function Solutions() {
   useReveal()
-
   useSEO({
     title: 'B2B Automation Solutions by Industry | AIB2B Automation',
-    description: 'Industry-specific B2B automation solutions for enterprise sales, SaaS customer success, e-commerce growth, and professional services. Built around your market.',
-    canonical: 'https://aib2bautomation.com/solutions'
+    description:
+      'Industry-specific B2B automation solutions for enterprise sales, SaaS customer success, e-commerce growth, and professional services.',
+    canonical: 'https://aib2bautomation.com/solutions',
   })
 
   return (
-    <div style={{ fontFamily: V.sans, background: V.bg, color: V.ink }}>
-      <style>{`
-        .sol-card{
-          border:1px solid ${V.rule};
-          border-radius:12px;
-          overflow:hidden;
-          transition:box-shadow .2s,transform .2s
-        }
-
-        .sol-card:hover{
-          box-shadow:0 8px 40px rgba(0,0,0,.08);
-          transform:translateY(-2px)
-        }
-
-        .proc-row{
-          display:grid;
-          grid-template-columns:72px 1fr;
-          transition:background .2s;
-          border-bottom:1px solid ${V.rule}
-        }
-
-        .proc-row:last-child{
-          border-bottom:none
-        }
-
-        .proc-row:hover{
-          background:${V.bg2}
-        }
-
-        .solutions-hero-grid{
-          display:grid;
-          grid-template-columns:minmax(0,1fr) 380px;
-          gap:80px;
-          align-items:start
-        }
-
-        .solutions-head-row{
-          display:flex;
-          align-items:flex-end;
-          justify-content:space-between;
-          gap:40px;
-          border-bottom:1px solid ${V.rule};
-          padding-bottom:32px;
-          margin-bottom:48px
-        }
-
-        .sol-grid{
-          display:grid;
-          grid-template-columns:repeat(2,minmax(0,1fr));
-          gap:20px
-        }
-
-        .proc-cols{
-          display:grid;
-          grid-template-columns:360px minmax(0,1fr);
-          gap:80px;
-          margin-bottom:56px;
-          padding-bottom:48px;
-          border-bottom:1px solid ${V.rule}
-        }
-
-        .cta-grid{
-          display:grid;
-          grid-template-columns:minmax(0,1fr) auto;
-          gap:48px;
-          align-items:center
-        }
-
-        @media (max-width: 1100px){
-          .solutions-hero-grid{
-            grid-template-columns:1fr;
-            gap:40px
-          }
-
-          .solutions-head-row{
-            align-items:flex-start;
-            flex-direction:column
-          }
-
-          .solutions-head-row p{
-            max-width:100% !important;
-            text-align:left !important
-          }
-
-          .proc-cols{
-            grid-template-columns:1fr;
-            gap:36px
-          }
-
-          .cta-grid{
-            grid-template-columns:1fr;
-            gap:28px
-          }
-        }
-
-        @media (max-width: 900px){
-          .sol-grid{
-            grid-template-columns:1fr !important
-          }
-
-          .proc-row{
-            grid-template-columns:60px 1fr
-          }
-        }
-
-        @media (max-width: 768px){
-          .sol-card > div:first-child{
-            padding:28px 22px !important
-          }
-
-          .sol-card > div:last-child{
-            padding:22px !important
-          }
-
-          .proc-row > div:first-child{
-            font-size:24px !important;
-            padding:22px 0 !important
-          }
-
-          .proc-row > div:last-child{
-            padding:22px 18px !important
-          }
-
-          .cta-wrap{
-            padding:36px 24px !important
-          }
-
-          .hero-copy-box{
-            padding-top:0 !important
-          }
-        }
-
-        @media (max-width: 640px){
-          .solutions-section{
-            padding:56px var(--px) !important
-          }
-
-          .process-section{
-            padding:56px var(--px) !important
-          }
-
-          .cta-outer{
-            padding:56px var(--px) !important
-          }
-
-          .solutions-head-row{
-            gap:20px;
-            padding-bottom:24px;
-            margin-bottom:32px
-          }
-
-          .proc-cols{
-            gap:24px;
-            margin-bottom:32px;
-            padding-bottom:28px
-          }
-
-          .proc-row{
-            grid-template-columns:1fr
-          }
-
-          .proc-row > div:first-child{
-            border-right:none !important;
-            border-bottom:1px solid ${V.rule};
-            justify-content:flex-start !important;
-            padding:16px 18px !important
-          }
-
-          .cta-action{
-            width:100%
-          }
-
-          .cta-action .btn-white,
-          .hero-copy-box .btn-blue,
-          .proc-cols .btn-blue{
-            width:100%;
-            justify-content:center;
-            display:inline-flex;
-            text-align:center
-          }
-        }
-      `}</style>
-
+    <div className="home-page">
       {/* HERO */}
-      <section className="page-hero">
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <nav className="breadcrumb" aria-label="Breadcrumb">
-            <Link to="/">Home</Link>
+      <section className="hero-section" style={{ padding: '88px 0 64px' }}>
+        <div className="hero-bg-grid" aria-hidden="true" />
+        <div className="section-container" style={{ position: 'relative', zIndex: 1 }}>
+          <nav style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 28, fontSize: 13, color: '#667085' }}>
+            <Link to="/" style={{ color: '#667085' }}>Home</Link>
             <span>›</span>
-            <span>Solutions</span>
+            <span style={{ color: '#101828', fontWeight: 600 }}>Solutions</span>
           </nav>
 
-          <div className="hero-h-rule" />
+          <div className="hero-badge au d1" style={{ marginBottom: 20 }}>
+            <span className="hero-badge-dot" />
+            Industry-specific automation
+          </div>
 
-          <div className="solutions-hero-grid">
-            <h1
-              style={{
-                fontFamily: V.serif,
-                fontSize: 'clamp(36px,5.5vw,80px)',
-                fontWeight: 400,
-                lineHeight: 0.97,
-                letterSpacing: '-.03em',
-                margin: 0
-              }}
-            >
-              Solutions built for
-              <br />
-              <em style={{ fontStyle: 'italic', color: V.blue }}>your industry,</em>
-              <br />
-              not anyone else's.
-            </h1>
-
-            <div
-              className="hero-copy-box"
-              style={{ paddingTop: 12, borderTop: `1px solid ${V.rule}` }}
-            >
-              <p
-                style={{
-                  fontSize: 16,
-                  color: V.ink2,
-                  lineHeight: 1.65,
-                  marginBottom: 28
-                }}
-              >
-                Generic automation playbooks fail because every industry has different buyers,
-                different timelines, and different signals. We build around yours from day one.
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
+            <div>
+              <h1 className="hero-title au d2" style={{ fontSize: 'clamp(38px,5.5vw,68px)', marginBottom: 20 }}>
+                Solutions built for{' '}
+                <span style={{ color: '#175cd3' }}>your industry,</span>{' '}
+                not anyone else's.
+              </h1>
+              <p className="hero-text au d3">
+                Generic automation playbooks fail because every industry has different buyers, different timelines, and different signals. We build around yours from day one.
               </p>
+              <div className="hero-actions au d3">
+                <Link to="/contact" className="btn btn-primary">Find your solution</Link>
+                <Link to="/services" className="btn btn-secondary">View all services</Link>
+              </div>
+            </div>
 
-              <Link to="/contact" className="btn-blue">
-                Find your solution →
-              </Link>
+            <div className="au d4">
+              <div className="hero-panel">
+                <div className="hero-panel-top">
+                  <div className="hero-window-dots"><span /><span /><span /></div>
+                  <div className="hero-live-pill"><span className="hero-live-dot" />4 verticals</div>
+                </div>
+                <div style={{ padding: '20px 18px', display: 'grid', gap: 12 }}>
+                  {SOLUTIONS.map((s, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', border: '1px solid #eaecf0', borderRadius: 12, background: '#fcfcfd' }}>
+                      <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.accent, flexShrink: 0 }} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#101828', marginBottom: 2 }}>{s.title}</div>
+                        <div style={{ fontSize: 11, color: '#667085' }}>{s.industries.join(' · ')}</div>
+                      </div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: s.accent, background: s.accentLight, padding: '3px 8px', borderRadius: 999, border: `1px solid ${s.accentBorder}`, whiteSpace: 'nowrap' }}>{s.metric.split(' ').slice(0, 2).join(' ')}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* SOLUTIONS */}
-      <section className="solutions-section" style={{ padding: '72px var(--px)' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div className="solutions-head-row">
+      {/* SOLUTIONS GRID */}
+      <section className="services-section">
+        <div className="section-container">
+          <div className="section-head reveal">
             <div>
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: V.ink4,
-                  letterSpacing: '.1em',
-                  textTransform: 'uppercase',
-                  marginBottom: 14
-                }}
-              >
-                Solutions
-              </div>
-
-              <h2
-                style={{
-                  fontFamily: V.serif,
-                  fontSize: 'clamp(30px,3.8vw,48px)',
-                  fontWeight: 400,
-                  lineHeight: 1.05,
-                  letterSpacing: '-.025em',
-                  margin: 0
-                }}
-              >
-                Four verticals.
-                <br />
-                <em style={{ fontStyle: 'italic', color: V.blue }}>One platform.</em>
-              </h2>
+              <div className="section-mini-head">Solutions</div>
+              <h2 className="section-title">Four verticals. One platform.</h2>
             </div>
-
-            <p
-              style={{
-                fontSize: 14,
-                color: V.ink3,
-                maxWidth: 260,
-                textAlign: 'right',
-                lineHeight: 1.55,
-                margin: 0
-              }}
-            >
-              Each solution is built around your specific buyers, your sales cycle, and your
-              revenue model.
+            <p className="section-copy">
+              Each solution is built around your specific buyers, your sales cycle, and your revenue model.
             </p>
           </div>
 
-          <div className="sol-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 18 }}>
             {SOLUTIONS.map((s, i) => (
-              <div key={i} className="sol-card">
-                <div style={{ background: s.accent, padding: '36px 32px', color: 'white' }}>
-                  <div style={{ fontSize: 28, marginBottom: 16 }}>{s.g}</div>
-
-                  <h3
-                    style={{
-                      fontFamily: V.serif,
-                      fontSize: 24,
-                      fontWeight: 400,
-                      color: 'white',
-                      marginBottom: 10,
-                      lineHeight: 1.15
-                    }}
-                  >
-                    {s.title}
-                  </h3>
-
-                  <p
-                    style={{
-                      fontSize: 14,
-                      color: 'rgba(255,255,255,.8)',
-                      lineHeight: 1.65,
-                      marginBottom: 16
-                    }}
-                  >
-                    {s.desc}
-                  </p>
-
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      background: 'rgba(255,255,255,.15)',
-                      padding: '8px 14px',
-                      borderRadius: 8,
-                      fontSize: 13,
-                      fontWeight: 700
-                    }}
-                  >
-                    ↑ {s.result}
+              <article key={i} className={`service-card reveal d${(i % 2) + 1}`} style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                {/* Colored header */}
+                <div style={{ background: s.accent, padding: '28px 28px 24px' }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.1em', color: 'rgba(255,255,255,0.65)', marginBottom: 10 }}>{s.num} — {s.tag}</div>
+                  <h3 style={{ fontFamily: "'Sora',sans-serif", fontSize: 22, fontWeight: 700, color: '#ffffff', margin: '0 0 10px', lineHeight: 1.2 }}>{s.title}</h3>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.75, margin: '0 0 16px' }}>{s.desc}</p>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.15)', padding: '6px 12px', borderRadius: 999, fontSize: 12, fontWeight: 700, color: '#ffffff' }}>
+                    ↑ {s.metric}
                   </div>
                 </div>
 
-                <div style={{ padding: '28px 32px' }}>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: V.ink4,
-                      letterSpacing: '.08em',
-                      textTransform: 'uppercase',
-                      marginBottom: 14
-                    }}
-                  >
-                    Key capabilities
-                  </div>
+                {/* Features */}
+                <div style={{ padding: '20px 28px', flex: 1 }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: '#98a2b3', marginBottom: 12 }}>Key capabilities</div>
+                  {s.features.map((f, fi) => (
+                    <div key={fi} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: '#475467', padding: '5px 0', borderBottom: fi < s.features.length - 1 ? '1px solid #f2f4f7' : 'none' }}>
+                      <span style={{ color: s.accent, fontWeight: 700, flexShrink: 0 }}>✓</span>
+                      {f}
+                    </div>
+                  ))}
+                </div>
 
-                  <ul
-                    style={{
-                      listStyle: 'none',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 10,
-                      marginBottom: 20,
-                      padding: 0
-                    }}
-                  >
-                    {s.features.map((f, fi) => (
-                      <li
-                        key={fi}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: 10,
-                          fontSize: 14,
-                          color: V.ink2
-                        }}
-                      >
-                        <span
-                          style={{
-                            color: s.accent,
-                            fontWeight: 700,
-                            flexShrink: 0,
-                            marginTop: 1
-                          }}
-                        >
-                          ✓
-                        </span>
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {/* Industry tags + CTA */}
+                <div style={{ padding: '16px 28px 24px', borderTop: '1px solid #eaecf0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     {s.industries.map((ind) => (
-                      <span
-                        key={ind}
-                        style={{
-                          padding: '4px 12px',
-                          background: V.blueLight,
-                          color: V.blue,
-                          borderRadius: 100,
-                          fontSize: 12,
-                          fontWeight: 600,
-                          border: `1px solid #C7D4FF`
-                        }}
-                      >
-                        {ind}
-                      </span>
+                      <span key={ind} style={{ padding: '3px 10px', background: s.accentLight, color: s.accent, borderRadius: 999, fontSize: 11, fontWeight: 700, border: `1px solid ${s.accentBorder}` }}>{ind}</span>
                     ))}
                   </div>
+                  <Link to="/contact" className="btn btn-primary" style={{ minHeight: 40, padding: '0 16px', fontSize: 13, background: s.accent, boxShadow: 'none', flexShrink: 0 }}>
+                    Get started →
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROCESS */}
+      <section className="process-section">
+        <div className="section-container">
+          <div className="section-head reveal">
+            <div>
+              <div className="section-mini-head">Our process</div>
+              <h2 className="section-title">From strategy to revenue in four steps.</h2>
+            </div>
+            <p className="section-copy">
+              We do not parachute in with a generic playbook. Every engagement starts with a deep understanding of your market, your buyers, and your category.
+            </p>
+          </div>
+
+          <div className="process-list">
+            {STEPS.map((step, i) => (
+              <div key={i} className={`process-item reveal d${(i % 4) + 1}`}>
+                <div className="process-week">{step.week}</div>
+                <div className="process-content">
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
                 </div>
               </div>
             ))}
@@ -519,115 +256,30 @@ export default function Solutions() {
         </div>
       </section>
 
-      {/* PROCESS */}
-      <section
-        className="process-section"
-        style={{
-          padding: '80px var(--px)',
-          background: V.bg2,
-          borderTop: `1px solid ${V.rule}`,
-          borderBottom: `1px solid ${V.rule}`
-        }}
-      >
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div className="proc-cols">
+      {/* COMPARE */}
+      <section className="compare-section" style={{ paddingTop: 0 }}>
+        <div className="section-container">
+          <div className="section-head reveal">
             <div>
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: V.ink4,
-                  letterSpacing: '.1em',
-                  textTransform: 'uppercase',
-                  marginBottom: 14
-                }}
-              >
-                Our process
-              </div>
-
-              <h2
-                style={{
-                  fontFamily: V.serif,
-                  fontSize: 'clamp(28px,3.5vw,42px)',
-                  fontWeight: 400,
-                  lineHeight: 1.05,
-                  letterSpacing: '-.025em',
-                  margin: 0
-                }}
-              >
-                From strategy to{' '}
-                <em style={{ fontStyle: 'italic', color: V.blue }}>revenue in four steps.</em>
-              </h2>
+              <div className="section-mini-head">Why AIB2B</div>
+              <h2 className="section-title">Not a generic tool. A system built for your vertical.</h2>
             </div>
-
-            <div style={{ paddingTop: 12, borderTop: `1px solid ${V.rule}` }}>
-              <p
-                style={{
-                  fontSize: 15,
-                  color: V.ink3,
-                  lineHeight: 1.7,
-                  marginBottom: 24
-                }}
-              >
-                We do not parachute in with a generic playbook. Every engagement starts with a deep
-                understanding of your market, your buyers, and the specific signals that indicate
-                purchase intent in your category.
-              </p>
-
-              <Link to="/contact" className="btn-blue" style={{ fontSize: 14, padding: '12px 22px' }}>
-                Get a custom solution →
-              </Link>
-            </div>
+            <p className="section-copy">
+              Most platforms offer one-size-fits-all templates. We build around the specific buying behaviour and pipeline logic of your industry.
+            </p>
           </div>
 
-          <div
-            style={{
-              border: `1px solid ${V.rule}`,
-              borderRadius: 12,
-              overflow: 'hidden',
-              background: 'white'
-            }}
-          >
-            {STEPS.map((s, i) => (
-              <div key={i} className="proc-row">
-                <div
-                  style={{
-                    fontFamily: V.serif,
-                    fontSize: 32,
-                    fontWeight: 400,
-                    color: V.ink4,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRight: `1px solid ${V.rule}`,
-                    padding: '28px 0'
-                  }}
-                >
-                  {s.num}
-                </div>
-
-                <div style={{ padding: '28px 32px' }}>
-                  <div
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 700,
-                      color: V.ink,
-                      marginBottom: 6
-                    }}
-                  >
-                    {s.title}
-                  </div>
-
-                  <div
-                    style={{
-                      fontSize: 13.5,
-                      color: V.ink3,
-                      lineHeight: 1.65
-                    }}
-                  >
-                    {s.body}
-                  </div>
-                </div>
+          <div className="compare-table reveal">
+            <div className="compare-row compare-header">
+              <div>Capability</div>
+              <div>AIB2B</div>
+              <div>Typical alternative</div>
+            </div>
+            {COMPARE.map(([feature, ours, theirs], i) => (
+              <div className="compare-row" key={i}>
+                <div>{feature}</div>
+                <div className="compare-good">{ours}</div>
+                <div className="compare-neutral">{theirs}</div>
               </div>
             ))}
           </div>
@@ -635,54 +287,23 @@ export default function Solutions() {
       </section>
 
       {/* CTA */}
-      <div className="cta-outer" style={{ padding: '72px var(--px)' }}>
-        <div
-          className="cta-wrap cta-grid"
-          style={{
-            maxWidth: 1280,
-            margin: '0 auto',
-            background: V.ink,
-            borderRadius: 16,
-            padding: '64px 72px'
-          }}
-        >
-          <div>
-            <h2
-              style={{
-                fontFamily: V.serif,
-                fontSize: 'clamp(28px,3.5vw,44px)',
-                fontWeight: 400,
-                color: 'white',
-                lineHeight: 1.1,
-                letterSpacing: '-.03em',
-                marginBottom: 12,
-                marginTop: 0
-              }}
-            >
-              Ready to build your{' '}
-              <em style={{ fontStyle: 'italic', color: '#93B4FF' }}>custom solution?</em>
-            </h2>
-
-            <p
-              style={{
-                fontSize: 14,
-                color: 'rgba(255,255,255,.5)',
-                lineHeight: 1.6,
-                margin: 0
-              }}
-            >
-              Tell us about your market and we will put together a solution built specifically for
-              your buyers.
-            </p>
-          </div>
-
-          <div className="cta-action" style={{ flexShrink: 0 }}>
-            <Link to="/contact" className="btn-white">
-              Get a custom solution →
-            </Link>
+      <section className="cta-section">
+        <div className="section-container">
+          <div className="cta-card reveal">
+            <div className="cta-copy">
+              <div className="section-mini-head light">Ready to build your custom solution?</div>
+              <h2>Tell us about your market and we'll build around it.</h2>
+              <p>
+                Every solution is tailored to your buyers, your sales cycle, and your revenue model. Let's map the right workflow.
+              </p>
+            </div>
+            <div className="cta-actions">
+              <Link to="/contact" className="btn btn-white">Get a custom solution</Link>
+              <Link to="/services" className="btn btn-outline-light">Explore services</Link>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

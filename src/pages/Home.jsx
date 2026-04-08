@@ -1,306 +1,800 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSEO } from '../hooks/useSEO'
 import { useReveal } from '../hooks/useReveal'
+import './home.css'
 
-// ── WORKFLOW ──────────────────────────────────────────────────────────────────
-const WF_NODES=[
-  {id:'trigger',x:36, y:162,w:160,label:'TRIGGER',     sub:'CRM new lead',    accent:'#1B4FD8'},
-  {id:'enrich', x:314,y:70, w:160,label:'ENRICH',      sub:'AI firmographics',accent:'#7C3AED'},
-  {id:'score',  x:314,y:162,w:160,label:'SCORE',       sub:'Predictive fit',  accent:'#0891B2'},
-  {id:'segment',x:314,y:257,w:160,label:'SEGMENT',     sub:'ICP classifier',  accent:'#D97706'},
-  {id:'if',     x:594,y:162,w:160,label:'IF / ELSE',   sub:'Score ≥ 75',      accent:'#16A34A'},
-  {id:'hot',    x:874,y:90, w:180,label:'HOT SEQUENCE',sub:'5-step cadence',  accent:'#1B4FD8'},
-  {id:'nurture',x:874,y:242,w:180,label:'NURTURE FLOW',sub:'Long-play drip',  accent:'#7C3AED'},
+const HERO_WORDS = ['pipeline', 'meetings', 'revenue']
+
+const LOGOS = [
+  'TechFlow',
+  'NovaSaaS',
+  'CloudVault',
+  'Nexify',
+  'DataBridge',
+  'ProScale',
+  'Elevate',
+  'PipelineAI',
 ]
-const WF_STEPS=[
-  {path:'M196,130 C255,130 255,98 314,98',  nodeId:'enrich', color:'#1B4FD8'},
-  {path:'M196,190 L314,190',                nodeId:'score',  color:'#0891B2'},
-  {path:'M196,190 C255,190 255,285 314,285',nodeId:'segment',color:'#D97706'},
-  {path:'M474,98 C535,98 535,190 594,190',  nodeId:'if',     color:'#1B4FD8'},
-  {path:'M474,190 L594,190',                nodeId:'if',     color:'#0891B2'},
-  {path:'M754,190 C815,190 815,118 874,118',nodeId:'hot',    color:'#1B4FD8'},
-  {path:'M754,190 C815,190 815,270 874,270',nodeId:'nurture',color:'#7C3AED'},
+
+const SERVICES = [
+  {
+    num: '01',
+    tag: 'AI REVOPS',
+    title: 'Lead enrichment and qualification systems',
+    body: 'Turn raw inbound and outbound leads into enriched buyer profiles with firmographics, qualification logic, routing rules, and clearer pipeline priority.',
+  },
+  {
+    num: '02',
+    tag: 'OUTBOUND SYSTEMS',
+    title: 'Automated outbound workflows that convert',
+    body: 'Launch multi-step email, LinkedIn, and follow-up systems built for B2B teams who want more qualified conversations without adding manual busywork.',
+  },
+  {
+    num: '03',
+    tag: 'GTM EXECUTION',
+    title: 'A go-to-market engine your team can operate',
+    body: 'We connect strategy, workflows, CRM process, and performance reporting so your team can run a repeatable system instead of disconnected tools.',
+  },
 ]
-const IDLE=['M196,130 C255,130 255,98 314,98','M196,190 L314,190','M196,190 C255,190 255,285 314,285','M474,98 C535,98 535,190 594,190','M474,190 L594,190','M474,285 C535,285 535,190 594,190','M754,190 C815,190 815,118 874,118','M754,190 C815,190 815,270 874,270']
+
+const PROBLEMS = [
+  {
+    title: 'Leads come in, but qualification is messy',
+    body: 'Most teams still rely on spreadsheets, guesswork, and slow manual checks before a lead reaches the right person.',
+  },
+  {
+    title: 'Outbound is inconsistent and hard to scale',
+    body: 'Campaigns often depend on one operator, one VA, or one sales rep instead of a structured workflow that can repeat and improve.',
+  },
+  {
+    title: 'CRM data is incomplete or poorly routed',
+    body: 'Bad handoffs, missing enrichment, and weak routing logic create slow response time and lower conversion quality.',
+  },
+  {
+    title: 'Marketing and sales do not share one system',
+    body: 'Without a connected GTM process, content, targeting, qualification, and follow-up stay fragmented across tools and people.',
+  },
+]
+
+const PROCESS = [
+  {
+    week: 'Week 1',
+    title: 'Strategy and GTM audit',
+    body: 'We review your current funnel, lead flow, CRM process, targeting, and outbound motion to find where revenue leaks are happening.',
+  },
+  {
+    week: 'Week 2',
+    title: 'Build the workflow system',
+    body: 'We set up enrichment logic, routing, automation, follow-up paths, data structure, and reporting foundations around your real process.',
+  },
+  {
+    week: 'Week 3',
+    title: 'Launch and activate',
+    body: 'Campaigns, handoffs, lead actions, and automation flows go live so your team starts working inside one clearer GTM motion.',
+  },
+  {
+    week: 'Week 4+',
+    title: 'Refine and scale',
+    body: 'We improve qualification quality, messaging performance, and funnel efficiency using real replies, meetings, and pipeline outcomes.',
+  },
+]
+
+const RESULTS = [
+  {
+    quote:
+      'We stopped wasting hours on low-fit leads and finally had a system that showed who to follow up with and when.',
+    metric: '4.7× more qualified meetings',
+    name: 'Sarah Mitchell',
+    role: 'VP Revenue · CloudVault',
+    initials: 'SM',
+  },
+  {
+    quote:
+      'The biggest difference was clarity. Leads were enriched, routed, and actioned faster, and the sales team trusted the process more.',
+    metric: '35% better close rate',
+    name: 'James Park',
+    role: 'Head of Growth · Nexify',
+    initials: 'JP',
+  },
+  {
+    quote:
+      'This felt less like buying another tool and more like installing a working go-to-market engine into the business.',
+    metric: '9× ROI in 90 days',
+    name: 'Priya Sharma',
+    role: 'CEO · DataBridge',
+    initials: 'PS',
+  },
+]
+
+const COMPARE = [
+  ['Lead enrichment + qualification', 'Yes', 'Limited'],
+  ['Custom routing logic', 'Yes', 'Rare'],
+  ['Outbound automation workflows', 'Yes', 'Partial'],
+  ['CRM process integration', 'Yes', 'Usually separate'],
+  ['Fast implementation', 'Weeks', 'Months'],
+  ['System built for your GTM process', 'Yes', 'Mostly template-based'],
+]
+
+const FAQS = [
+  {
+    q: 'Who is this best for?',
+    a: 'This is best for B2B SaaS teams, service businesses, agencies, founders, GTM teams, and RevOps-led teams that want more qualified pipeline with better systems.',
+  },
+  {
+    q: 'Do you only provide software?',
+    a: 'No. The goal is not just to hand over another tool. The goal is to build a working workflow system around your sales and go-to-market process.',
+  },
+  {
+    q: 'Can this work with our existing CRM?',
+    a: 'Yes. The setup is designed to fit into your current CRM and lead process rather than forcing a completely new operating model.',
+  },
+  {
+    q: 'How fast can we launch?',
+    a: 'Many teams can get a first usable version live within weeks, depending on workflow complexity, data quality, and CRM readiness.',
+  },
+]
+
+const WORKFLOW_NODES = [
+  { id: 'lead', x: 30, y: 155, w: 170, label: 'NEW LEAD', sub: 'Form / list / CRM', accent: '#175cd3' },
+  { id: 'enrich', x: 300, y: 70, w: 180, label: 'ENRICH', sub: 'Firmographics + context', accent: '#7f56d9' },
+  { id: 'score', x: 300, y: 155, w: 180, label: 'QUALIFY', sub: 'Fit + intent scoring', accent: '#12b76a' },
+  { id: 'route', x: 300, y: 240, w: 180, label: 'ROUTE', sub: 'Owner / segment logic', accent: '#f79009' },
+  { id: 'decision', x: 590, y: 155, w: 180, label: 'DECISION', sub: 'High intent?', accent: '#175cd3' },
+  { id: 'hot', x: 860, y: 90, w: 185, label: 'HOT FLOW', sub: 'Sales follow-up', accent: '#175cd3' },
+  { id: 'nurture', x: 860, y: 220, w: 185, label: 'NURTURE', sub: 'Stay in market', accent: '#7f56d9' },
+]
+
+const WORKFLOW_STEPS = [
+  { path: 'M200,185 C250,185 250,100 300,100', nodeId: 'enrich', color: '#7f56d9' },
+  { path: 'M200,185 L300,185', nodeId: 'score', color: '#12b76a' },
+  { path: 'M200,185 C250,185 250,270 300,270', nodeId: 'route', color: '#f79009' },
+  { path: 'M480,100 C535,100 535,185 590,185', nodeId: 'decision', color: '#7f56d9' },
+  { path: 'M480,185 L590,185', nodeId: 'decision', color: '#12b76a' },
+  { path: 'M770,185 C815,185 815,120 860,120', nodeId: 'hot', color: '#175cd3' },
+  { path: 'M770,185 C815,185 815,250 860,250', nodeId: 'nurture', color: '#7f56d9' },
+]
+
+const IDLE_PATHS = [
+  'M200,185 C250,185 250,100 300,100',
+  'M200,185 L300,185',
+  'M200,185 C250,185 250,270 300,270',
+  'M480,100 C535,100 535,185 590,185',
+  'M480,185 L590,185',
+  'M480,270 C535,270 535,185 590,185',
+  'M770,185 C815,185 815,120 860,120',
+  'M770,185 C815,185 815,250 860,250',
+]
+
+function useTypingWord() {
+  const [index, setIndex] = useState(0)
+  const [text, setText] = useState('')
+  const [phase, setPhase] = useState('typing')
+
+  useEffect(() => {
+    const word = HERO_WORDS[index]
+    let timeout
+
+    if (phase === 'typing') {
+      if (text.length < word.length) {
+        timeout = setTimeout(() => {
+          setText(word.slice(0, text.length + 1))
+        }, 80)
+      } else {
+        timeout = setTimeout(() => setPhase('pause'), 1500)
+      }
+    } else if (phase === 'pause') {
+      timeout = setTimeout(() => setPhase('erasing'), 300)
+    } else {
+      if (text.length > 0) {
+        timeout = setTimeout(() => {
+          setText(text.slice(0, -1))
+        }, 45)
+      } else {
+        setIndex((prev) => (prev + 1) % HERO_WORDS.length)
+        setPhase('typing')
+      }
+    }
+
+    return () => clearTimeout(timeout)
+  }, [index, text, phase])
+
+  return text
+}
+
+function useCounter(target, duration = 1600) {
+  const [count, setCount] = useState('0')
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const element = ref.current
+    if (!element) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        observer.disconnect()
+
+        let start = null
+        const numeric = parseFloat(target.replace(/[^0-9.]/g, ''))
+        const hasDollar = target.includes('$')
+        const hasPlus = target.includes('+')
+        const hasPercent = target.includes('%')
+        const hasHours = target.toLowerCase().includes('h')
+
+        const animate = (timestamp) => {
+          if (!start) start = timestamp
+          const progress = Math.min((timestamp - start) / duration, 1)
+          const eased = 1 - Math.pow(1 - progress, 3)
+          const value = numeric * eased
+
+          let formatted = `${Math.round(value)}`
+          if (hasDollar) formatted = `$${Math.round(value).toLocaleString()}`
+          else formatted = `${Math.round(value).toLocaleString()}`
+          if (hasPercent) formatted += '%'
+          if (hasHours) formatted += 'h'
+          if (hasPlus) formatted += '+'
+
+          setCount(formatted)
+
+          if (progress < 1) requestAnimationFrame(animate)
+        }
+
+        requestAnimationFrame(animate)
+      },
+      { threshold: 0.45 }
+    )
+
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [target, duration])
+
+  return [count, ref]
+}
+
+function StatCard({ value, label, sub }) {
+  const [display, ref] = useCounter(value)
+
+  return (
+    <div ref={ref} className="stat-card reveal">
+      <div className="stat-value">{display}</div>
+      <div className="stat-label">{label}</div>
+      <div className="stat-sub">{sub}</div>
+    </div>
+  )
+}
 
 function WorkflowCanvas() {
-  const svgRef=useRef(null), dotRef=useRef(null)
-  const [litNodes,setLitNodes]=useState(new Set(['trigger']))
-  const [litEdges,setLitEdges]=useState([])
-  useEffect(()=>{
-    let si=0,cancelled=false
-    function anim(d,color,cb){
-      const svg=svgRef.current,dot=dotRef.current
-      if(!svg||!dot||cancelled)return cb()
-      const tmp=document.createElementNS('http://www.w3.org/2000/svg','path')
-      tmp.setAttribute('d',d);tmp.style.display='none';svg.appendChild(tmp)
-      const len=tmp.getTotalLength();svg.removeChild(tmp)
-      dot.setAttribute('fill',color);dot.style.opacity='1'
-      const ap=document.createElementNS('http://www.w3.org/2000/svg','path')
-      ap.setAttribute('d',d);ap.style.display='none';svg.appendChild(ap)
-      let s=null
-      const dur=Math.max(Math.min(len*2.2,900),350)
-      function f(ts){
-        if(cancelled){dot.style.opacity='0';try{svg.removeChild(ap)}catch(e){}return}
-        if(!s)s=ts;const t=Math.min((ts-s)/dur,1),e=t<.5?2*t*t:-1+(4-2*t)*t
-        try{const p=ap.getPointAtLength(e*len);dot.setAttribute('cx',p.x);dot.setAttribute('cy',p.y)}catch(e){}
-        t<1?requestAnimationFrame(f):(dot.style.opacity='0',svg.removeChild(ap),cb())
+  const svgRef = useRef(null)
+  const dotRef = useRef(null)
+  const [litNodes, setLitNodes] = useState(new Set(['lead']))
+  const [litEdges, setLitEdges] = useState([])
+
+  useEffect(() => {
+    let stepIndex = 0
+    let cancelled = false
+
+    const animatePath = (pathData, color, callback) => {
+      const svg = svgRef.current
+      const dot = dotRef.current
+      if (!svg || !dot || cancelled) return callback()
+
+      const tempPath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+      tempPath.setAttribute('d', pathData)
+      tempPath.style.display = 'none'
+      svg.appendChild(tempPath)
+
+      const length = tempPath.getTotalLength()
+      svg.removeChild(tempPath)
+
+      const motionPath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+      motionPath.setAttribute('d', pathData)
+      motionPath.style.display = 'none'
+      svg.appendChild(motionPath)
+
+      dot.setAttribute('fill', color)
+      dot.style.opacity = '1'
+
+      let start = null
+      const duration = Math.max(Math.min(length * 2.2, 900), 380)
+
+      const frame = (timestamp) => {
+        if (cancelled) {
+          dot.style.opacity = '0'
+          try {
+            svg.removeChild(motionPath)
+          } catch {}
+          return
+        }
+
+        if (!start) start = timestamp
+        const progress = Math.min((timestamp - start) / duration, 1)
+        const eased =
+          progress < 0.5
+            ? 2 * progress * progress
+            : -1 + (4 - 2 * progress) * progress
+
+        try {
+          const point = motionPath.getPointAtLength(eased * length)
+          dot.setAttribute('cx', point.x)
+          dot.setAttribute('cy', point.y)
+        } catch {}
+
+        if (progress < 1) {
+          requestAnimationFrame(frame)
+        } else {
+          dot.style.opacity = '0'
+          try {
+            svg.removeChild(motionPath)
+          } catch {}
+          callback()
+        }
       }
-      requestAnimationFrame(f)
+
+      requestAnimationFrame(frame)
     }
-    function run(){
-      if(cancelled)return
-      if(si>=WF_STEPS.length){setTimeout(()=>{if(cancelled)return;si=0;setLitNodes(new Set(['trigger']));setLitEdges([]);setTimeout(run,600)},2000);return}
-      const step=WF_STEPS[si]
-      anim(step.path,step.color,()=>{
-        if(cancelled)return
-        setLitEdges(e=>[...e,{path:step.path,color:step.color}])
-        setLitNodes(n=>new Set([...n,step.nodeId]))
-        si++;setTimeout(run,250)
+
+    const run = () => {
+      if (cancelled) return
+
+      if (stepIndex >= WORKFLOW_STEPS.length) {
+        setTimeout(() => {
+          if (cancelled) return
+          stepIndex = 0
+          setLitNodes(new Set(['lead']))
+          setLitEdges([])
+          setTimeout(run, 500)
+        }, 1400)
+        return
+      }
+
+      const step = WORKFLOW_STEPS[stepIndex]
+      animatePath(step.path, step.color, () => {
+        if (cancelled) return
+        setLitEdges((prev) => [...prev, { path: step.path, color: step.color }])
+        setLitNodes((prev) => new Set([...prev, step.nodeId]))
+        stepIndex += 1
+        setTimeout(run, 200)
       })
     }
-    const t=setTimeout(run,1200)
-    return()=>{cancelled=true;clearTimeout(t)}
-  },[])
+
+    const timer = setTimeout(run, 800)
+
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [])
+
   return (
-    <div className="wf-wrap">
-      <div className="wf-bar">
-        {['#EF4444','#F59E0B','#22C55E'].map(c=><span key={c} style={{width:10,height:10,borderRadius:'50%',background:c,display:'inline-block'}}/>)}
-        <span style={{flex:1,textAlign:'center',fontSize:12,color:'#B8B8B8',letterSpacing:'.05em'}}>AIB2B — Workflow Editor</span>
-        <span style={{fontSize:11,color:'#16A34A',fontWeight:600,display:'flex',alignItems:'center',gap:5}}>
-          <span style={{width:6,height:6,borderRadius:'50%',background:'#16A34A',animation:'blink 1.2s infinite'}}/>LIVE
-        </span>
+    <div className="workflow-canvas reveal">
+      <div className="workflow-topbar">
+        <div className="workflow-dots">
+          <span className="dot red" />
+          <span className="dot yellow" />
+          <span className="dot green" />
+        </div>
+
+        <div className="workflow-topbar-title">AIB2B Workflow Engine</div>
+
+        <div className="workflow-status">
+          <span className="live-dot" />
+          Live
+        </div>
       </div>
-      <div style={{overflowX:'auto',WebkitOverflowScrolling:'touch'}}>
-        <svg ref={svgRef} style={{display:'block',minWidth:600}} width="100%" viewBox="0 0 1100 380" aria-label="Live workflow automation">
+
+      <div className="workflow-svg-wrap">
+        <svg
+          ref={svgRef}
+          viewBox="0 0 1080 360"
+          width="100%"
+          aria-label="Lead workflow engine"
+        >
           <defs>
-            <pattern id="wfg" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx=".8" cy=".8" r=".8" fill="#D8D8D8"/></pattern>
-            <marker id="ai" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#DCDCDC" strokeWidth="1.5" strokeLinecap="round"/></marker>
-            <marker id="al" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#1B4FD8" strokeWidth="1.5" strokeLinecap="round"/></marker>
+            <pattern id="wf-grid" x="0" y="0" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="1.2" cy="1.2" r="1" fill="#d0d5dd" />
+            </pattern>
+
+            <marker id="idle-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#d0d5dd" strokeWidth="1.4" strokeLinecap="round" />
+            </marker>
+
+            <marker id="live-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#175cd3" strokeWidth="1.6" strokeLinecap="round" />
+            </marker>
           </defs>
-          <rect width="1100" height="380" fill="#F7F7F5"/>
-          <rect width="1100" height="380" fill="url(#wfg)" opacity=".7"/>
-          {IDLE.map((d,i)=><path key={i} d={d} fill="none" stroke="#DCDCDC" strokeWidth="1" strokeDasharray="5 4" markerEnd="url(#ai)"/>)}
-          {litEdges.map((e,i)=><path key={i} d={e.path} fill="none" stroke={e.color} strokeWidth="1.5" markerEnd="url(#al)"/>)}
-          <text x="825" y="148" textAnchor="middle" fontSize="11" fill="#B8B8B8" fontFamily="DM Sans,sans-serif" fontWeight="600">YES</text>
-          <text x="825" y="248" textAnchor="middle" fontSize="11" fill="#B8B8B8" fontFamily="DM Sans,sans-serif" fontWeight="600">NO</text>
-          {WF_NODES.map(n=>{
-            const lit=litNodes.has(n.id)
-            return <g key={n.id}>
-              <rect x={n.x} y={n.y} width={n.w} height={56} rx={8} fill={lit?'#F0F4FF':'white'} stroke={lit?n.accent:'#E2E2E2'} strokeWidth={lit?1.5:1} style={{transition:'all .3s'}}/>
-              <rect x={n.x} y={n.y} width={4} height={56} rx={2} fill={n.accent}/>
-              <text x={n.x+16} y={n.y+22} fontSize="11" fontWeight="700" fill="#3A3A3A" fontFamily="DM Sans,sans-serif" letterSpacing=".04em">{n.label}</text>
-              <text x={n.x+16} y={n.y+40} fontSize="12" fill="#7A7A7A" fontFamily="DM Sans,sans-serif">{n.sub}</text>
-            </g>
+
+          <rect width="1080" height="360" fill="#ffffff" />
+          <rect width="1080" height="360" fill="url(#wf-grid)" opacity=".55" />
+
+          {IDLE_PATHS.map((path, i) => (
+            <path
+              key={i}
+              d={path}
+              fill="none"
+              stroke="#d0d5dd"
+              strokeWidth="1"
+              strokeDasharray="5 5"
+              markerEnd="url(#idle-arrow)"
+            />
+          ))}
+
+          {litEdges.map((edge, i) => (
+            <path
+              key={i}
+              d={edge.path}
+              fill="none"
+              stroke={edge.color}
+              strokeWidth="2"
+              markerEnd="url(#live-arrow)"
+              style={{ filter: `drop-shadow(0 0 6px ${edge.color}45)` }}
+            />
+          ))}
+
+          <text x="815" y="145" textAnchor="middle" fontSize="11" fill="#667085" fontFamily="Inter, sans-serif" fontWeight="700">
+            YES
+          </text>
+          <text x="815" y="250" textAnchor="middle" fontSize="11" fill="#667085" fontFamily="Inter, sans-serif" fontWeight="700">
+            NO
+          </text>
+
+          {WORKFLOW_NODES.map((node) => {
+            const active = litNodes.has(node.id)
+
+            return (
+              <g key={node.id}>
+                <rect
+                  x={node.x}
+                  y={node.y}
+                  width={node.w}
+                  height="60"
+                  rx="12"
+                  fill={active ? '#f8fbff' : '#ffffff'}
+                  stroke={active ? node.accent : '#eaecf0'}
+                  strokeWidth={active ? 1.8 : 1}
+                  style={{
+                    transition: 'all .3s ease',
+                    filter: active ? `drop-shadow(0 8px 18px ${node.accent}18)` : 'none',
+                  }}
+                />
+                <rect x={node.x} y={node.y} width="4" height="60" rx="2" fill={node.accent} />
+                <text
+                  x={node.x + 16}
+                  y={node.y + 22}
+                  fontSize="11"
+                  fontWeight="700"
+                  fill="#101828"
+                  fontFamily="Inter, sans-serif"
+                  letterSpacing=".05em"
+                >
+                  {node.label}
+                </text>
+                <text
+                  x={node.x + 16}
+                  y={node.y + 41}
+                  fontSize="12"
+                  fill="#667085"
+                  fontFamily="Inter, sans-serif"
+                >
+                  {node.sub}
+                </text>
+
+                {active && (
+                  <circle cx={node.x + node.w - 14} cy={node.y + 14} r="4" fill={node.accent} opacity=".9">
+                    <animate attributeName="r" values="3;5;3" dur="1.4s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values=".9;.45;.9" dur="1.4s" repeatCount="indefinite" />
+                  </circle>
+                )}
+              </g>
+            )
           })}
-          <circle ref={dotRef} r="5" fill="#1B4FD8" opacity="0" style={{filter:'drop-shadow(0 0 4px #1B4FD8)'}}/>
+
+          <circle
+            ref={dotRef}
+            r="6"
+            fill="#175cd3"
+            opacity="0"
+            style={{ filter: 'drop-shadow(0 0 8px #175cd3)' }}
+          />
         </svg>
       </div>
-      <div className="wf-metrics">
-        {[{l:'Leads enriched',v:'1,284',c:'#1B4FD8'},{l:'Active sequences',v:'47',c:'#7C3AED'},{l:'Meetings booked',v:'23',c:'#16A34A'},{l:'Pipeline added',v:'$412K',c:'#D97706'}].map((m,i)=>(
-          <div key={i} className="wf-metric">
-            <div style={{fontSize:10,color:'#B8B8B8',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:4}}>{m.l}</div>
-            <div style={{fontSize:20,fontWeight:700,color:m.c,letterSpacing:'-.02em'}}>{m.v}</div>
-          </div>
-        ))}
+
+      <div className="workflow-metrics">
+        <div className="workflow-metric">
+          <span>Leads enriched</span>
+          <strong>1,284</strong>
+        </div>
+        <div className="workflow-metric">
+          <span>Qualified accounts</span>
+          <strong>312</strong>
+        </div>
+        <div className="workflow-metric">
+          <span>Meetings booked</span>
+          <strong>23</strong>
+        </div>
+        <div className="workflow-metric">
+          <span>Pipeline added</span>
+          <strong>$412K</strong>
+        </div>
       </div>
     </div>
   )
 }
 
-// ── DATA ──────────────────────────────────────────────────────────────────────
-const LOGOS=['TechFlow','NovaSaaS','CloudVault','Nexify','DataBridge','ProScale','Elevate','PipelineAI']
-const FEATURES=[
-  {num:'01',tag:'Enrichment', title:'Intent-aware lead profiles',  body:'Raw CSV in, fully enriched ICP profiles out. Firmographics, technographics, buying signals, and a predictive fit score before your reps touch a single record.',accent:'#1B4FD8'},
-  {num:'02',tag:'Automation', title:'Multi-step workflow engine',  body:"Build nurture sequences across email, LinkedIn, and phone without manual intervention. Every step triggers on real buyer behaviour — not arbitrary time delays.",accent:'#7C3AED'},
-  {num:'03',tag:'Intelligence',title:'Predictive deal scoring',   body:'Our model ranks every lead by close likelihood based on your own historical data. Reps spend time on accounts that actually convert.',accent:'#0891B2'},
-  {num:'04',tag:'Integration',title:'Sync with your whole stack', body:'Bidirectional sync with Salesforce, HubSpot, Pipedrive, and 40+ platforms. Enriched fields and scores land in your CRM automatically.',accent:'#16A34A'},
-  {num:'05',tag:'Campaigns',  title:'Launch and optimise at scale',body:'End-to-end campaign management with real-time attribution. The AI surfaces what to do next — you approve, it executes.',accent:'#D97706'},
-  {num:'06',tag:'Security',   title:'SOC 2 · GDPR · Zero trust',  body:'Enterprise security ships with every plan. Encryption, role-based access, full audit logs, and data residency controls included.',accent:'#EF4444'},
-]
-const STEPS=[
-  {num:'01',title:'Discovery and strategy',body:'We map your funnel, surface the gaps, and co-build an automation roadmap tied to your revenue targets — not a generic playbook.'},
-  {num:'02',title:'Connect and configure', body:'Our team wires your CRM, enrichment sources, and channels. Most pipelines are live within 48 hours of signing — not months.'},
-  {num:'03',title:'Launch campaigns',      body:'Multi-channel sequences go live. The AI refines message copy, timing, and audience targeting based on what is actually working.'},
-  {num:'04',title:'Scale what works',      body:'Real-time analytics surface your winners. One click expands a winning campaign across your entire total addressable market.'},
-]
-const TESTIMONIALS=[
-  {q:'We went from 10 qualified meetings a month to 47 in just 60 days. The enrichment quality changed how we run outbound entirely.',metric:'4.7× more meetings',name:'Sarah Mitchell',role:'VP Revenue · CloudVault',ini:'SM'},
-  {q:"We stopped burning hours on leads that were never going to buy the week we went live. Our close rate jumped 35% in Q1. The ROI math is embarrassingly simple.",metric:'35% higher close rate',name:'James Park',role:'Head of Growth · Nexify',ini:'JP'},
-  {q:"Three automation tools before this one and none came close. Hit 9× ROI by month three. The ROI calculator was actually conservative.",metric:'9× ROI in 90 days',name:'Priya Sharma',role:'CEO · DataBridge',ini:'PS'},
-]
-const COMPARE=[
-  ['Multi-channel automation',true,false],['AI lead scoring',true,false],
-  ['Real-time enrichment',true,'⚠ Partial'],['40+ CRM integrations',true,false],
-  ['Dedicated success manager',true,false],['48-hour setup',true,false],
-  ['No long-term contracts',true,false],
-]
+function FAQItem({ item, isOpen, onClick }) {
+  return (
+    <div className={`faq-item ${isOpen ? 'open' : ''}`}>
+      <button className="faq-button" onClick={onClick}>
+        <span>{item.q}</span>
+        <span className="faq-icon">{isOpen ? '−' : '+'}</span>
+      </button>
+      <div className="faq-answer">
+        <p>{item.a}</p>
+      </div>
+    </div>
+  )
+}
 
-// ── PAGE ──────────────────────────────────────────────────────────────────────
 export default function Home() {
-  useSEO({title:'AIB2B Automation — B2B Lead Enrichment & Marketing Automation',description:'AI-powered lead enrichment, marketing automation, and campaign management for B2B revenue teams. Fill your pipeline and close more deals. Start free for 14 days.',canonical:'https://aib2bautomation.com/'})
+  useSEO({
+    title: 'AIB2B Automation — GTM Systems, AI RevOps & Qualified Pipeline Growth',
+    description:
+      'AIB2B helps B2B teams build lead enrichment, qualification, routing, and outbound workflow systems that generate more qualified pipeline.',
+    canonical: 'https://aib2bautomation.com/',
+  })
+
   useReveal()
 
+  const typedWord = useTypingWord()
+  const [openFaq, setOpenFaq] = useState(0)
+
   return (
-    <div>
-      {/* ── HERO ── */}
-      <section style={{padding:'72px 40px 0',maxWidth:1280,margin:'0 auto'}}>
-        <div className="au" style={{display:'flex',alignItems:'center',gap:10,marginBottom:36}}>
-          <div style={{width:8,height:8,background:'#16A34A',borderRadius:'50%',animation:'dotPulse 2s ease-in-out infinite'}}/>
-          <span style={{fontSize:12,fontWeight:600,color:'#7A7A7A',letterSpacing:'.06em',textTransform:'uppercase'}}>Trusted by 500+ B2B revenue teams</span>
-        </div>
-        <div style={{width:'100%',height:1,background:'#E2E2E2',marginBottom:44}}/>
-        <div className="hero-grid">
-          <h1 className="hero-h1 au d1">
-            Fill your<br/>pipeline.<br/><em>Close more</em><br/>deals.
-          </h1>
-          <div className="hero-sub-col au d2">
-            <p className="hero-p">AI-powered lead enrichment, marketing automation, and campaign management — one platform for B2B teams who cannot afford to waste a single rep hour on the wrong prospect.</p>
-            <div className="hero-actions">
-              <Link to="/contact" className="btn-blue">Start 14-day trial →</Link>
-              <Link to="/case-studies" className="btn-outline">See results</Link>
+    <div className="home-page">
+      <section className="hero-section">
+        <div className="hero-bg-grid" aria-hidden="true" />
+        <div className="hero-inner">
+          <div className="hero-copy">
+            <div className="hero-badge au d1">
+              <span className="hero-badge-dot" />
+              GTM systems for B2B teams
             </div>
-            {['No credit card required','Live in 48 hours','SOC 2 certified'].map((t,i)=>(
-              <div key={i} style={{display:'flex',alignItems:'center',gap:8,fontSize:13,color:'#7A7A7A',padding:'8px 0',borderBottom:'1px solid #E2E2E2',borderTop:i===0?'1px solid #E2E2E2':'none'}}>
-                <span style={{color:'#1B4FD8',fontWeight:700}}>✓</span>{t}
+
+            <h1 className="hero-title au d2">
+              Build go-to-market systems
+              <br />
+              that generate qualified{' '}
+              <span className="hero-typed">
+                {typedWord}
+                <span className="hero-cursor">|</span>
+              </span>
+            </h1>
+
+            <p className="hero-text au d3">
+              We help B2B teams improve lead quality, outbound execution, CRM flow,
+              and revenue operations with AI-powered systems that are built to be used
+              by real teams, not just admired in dashboards.
+            </p>
+
+            <div className="hero-actions au d3">
+              <Link to="/contact" className="btn btn-primary">
+                Book a strategy call
+              </Link>
+              <Link to="/case-studies" className="btn btn-secondary">
+                See results
+              </Link>
+            </div>
+
+            <div className="hero-proof au d4">
+              <div className="proof-box">
+                <strong>500+</strong>
+                <span>B2B teams supported</span>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── WORKFLOW ── */}
-      <div className="au d3" style={{maxWidth:1280,margin:'52px auto 0',padding:'0 40px'}}>
-        <div style={{fontSize:11,fontWeight:600,color:'#B8B8B8',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:14,display:'flex',alignItems:'center',gap:10}}>
-          <span style={{flex:1,height:1,background:'#E2E2E2',display:'block'}}/>Live automation workflow<span style={{flex:1,height:1,background:'#E2E2E2',display:'block'}}/>
-        </div>
-        <WorkflowCanvas/>
-      </div>
-
-      {/* ── LOGOS ── */}
-      <div className="logos-wrap" style={{marginTop:68}}>
-        <div className="logos-label">Trusted by</div>
-        <div className="logos-track-wrap">
-          <div className="logos-track">
-            {[...LOGOS,...LOGOS].map((l,i)=><div key={i} className="logo-item">{l}</div>)}
-          </div>
-        </div>
-      </div>
-
-      {/* ── STATS ── */}
-      <div className="stats-row">
-        {[{n:'500+',t:'B2B companies',s:'trust our platform'},{n:'40%',t:'More qualified leads',s:'average pipeline lift'},{n:'$50M+',t:'Revenue generated',s:'across our clients'},{n:'48h',t:'To go live',s:'from signup to pipeline'}].map((s,i)=>(
-          <div key={i} className={`stat-cell reveal d${i+1}`}>
-            <div style={{fontFamily:"'Instrument Serif',Georgia,serif",fontSize:'clamp(40px,5vw,60px)',fontWeight:400,color:'#0A0A0A',lineHeight:1,marginBottom:8,letterSpacing:'-.03em'}}>{s.n}</div>
-            <div style={{fontSize:14,fontWeight:600,color:'#0A0A0A',marginBottom:4}}>{s.t}</div>
-            <div style={{fontSize:13,color:'#7A7A7A'}}>{s.s}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* ── FEATURES ── */}
-      <section style={{padding:'80px 40px',maxWidth:1280,margin:'0 auto'}}>
-        <div className="section-ruled reveal">
-          <div>
-            <div className="eyebrow">What we do</div>
-            <h2 style={{fontFamily:"'Instrument Serif',Georgia,serif",fontSize:'clamp(30px,4vw,48px)',fontWeight:400,lineHeight:1.05,letterSpacing:'-.025em'}}>
-              Everything your revenue team needs.<br/><em style={{fontStyle:'italic',color:'#1B4FD8'}}>All in one place.</em>
-            </h2>
-          </div>
-          <p className="section-ruled-note desktop-only">One platform. Six capabilities. Zero switching between tools.</p>
-        </div>
-        <div className="grid-3" style={{border:'1px solid #E2E2E2',borderRadius:12,overflow:'hidden',marginTop:40}}>
-          {FEATURES.map((f,i)=>(
-            <div key={i} className={`feat-card reveal d${(i%3)+1}`} style={{['--accent-color']:f.accent}}>
-              <style>{`.feat-card:nth-child(${i+1})::before{background:${f.accent}}`}</style>
-              <div style={{fontSize:11,fontWeight:700,color:'#B8B8B8',letterSpacing:'.1em',marginBottom:18}}>{f.num} — {f.tag}</div>
-              <div style={{fontFamily:"'Instrument Serif',Georgia,serif",fontSize:21,fontWeight:400,color:'#0A0A0A',marginBottom:10,lineHeight:1.2}}>{f.title}</div>
-              <div style={{fontSize:13,color:'#7A7A7A',lineHeight:1.7}}>{f.body}</div>
-              <div className="feat-arrow" style={{marginTop:16,fontSize:13,color:f.accent,fontWeight:600,opacity:0,transition:'opacity .2s'}}>
-                <Link to="/services" style={{color:f.accent}}>Learn more →</Link>
+              <div className="proof-box">
+                <strong>40%</strong>
+                <span>avg. qualified pipeline lift</span>
+              </div>
+              <div className="proof-box">
+                <strong>48h</strong>
+                <span>first launch window</span>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ── */}
-      <section style={{background:'#F7F7F5',borderTop:'1px solid #E2E2E2',borderBottom:'1px solid #E2E2E2'}}>
-        <div className="how-split" style={{maxWidth:1280,margin:'0 auto'}}>
-          <div className="how-left reveal-left">
-            <div className="eyebrow">How it works</div>
-            <h2 style={{fontFamily:"'Instrument Serif',Georgia,serif",fontSize:'clamp(26px,3.5vw,40px)',fontWeight:400,lineHeight:1.1,letterSpacing:'-.03em',marginBottom:18}}>
-              From signup to pipeline <em style={{fontStyle:'italic',color:'#1B4FD8'}}>in 48 hours.</em>
-            </h2>
-            <p style={{fontSize:14,color:'#7A7A7A',lineHeight:1.7,marginBottom:24}}>No lengthy onboarding. No professional services. Our process gets you live and generating pipeline faster than anything else.</p>
-            <Link to="/contact" className="btn-blue" style={{fontSize:14,padding:'12px 22px'}}>Start your trial →</Link>
           </div>
-          <div>
-            {STEPS.map((s,i)=>(
-              <div key={i} className={`proc-step reveal d${i+1}`}>
-                <div className="proc-num">{s.num}</div>
-                <div className="proc-content">
-                  <div className="proc-title">{s.title}</div>
-                  <div className="proc-body">{s.body}</div>
+
+          <div className="hero-visual au d4">
+            <div className="hero-panel">
+              <div className="hero-panel-top">
+                <div className="hero-window-dots">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <div className="hero-live-pill">
+                  <span className="hero-live-dot" />
+                  Live pipeline
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ── COMPARE ── */}
-      <section style={{padding:'72px 40px'}}>
-        <div style={{maxWidth:760,margin:'0 auto'}}>
-          <div className="eyebrow reveal">Why choose us</div>
-          <h2 className="reveal" style={{fontFamily:"'Instrument Serif',Georgia,serif",fontSize:'clamp(26px,3.5vw,40px)',fontWeight:400,letterSpacing:'-.03em',marginBottom:40}}>
-            We do what <em style={{fontStyle:'italic',color:'#1B4FD8'}}>others cannot.</em>
-          </h2>
-          <div className="reveal" style={{border:'1px solid #E2E2E2',borderRadius:12,overflow:'hidden'}}>
-            <div className="compare-row" style={{background:'#F7F7F5',borderBottom:'1px solid #E2E2E2'}}>
-              <div style={{padding:'13px 20px',fontSize:11,fontWeight:700,color:'#7A7A7A',letterSpacing:'.06em',textTransform:'uppercase'}}>Feature</div>
-              <div style={{padding:'13px 20px',fontSize:12,fontWeight:700,color:'#1B4FD8',background:'#EEF2FF',textAlign:'center'}}>AIB2B</div>
-              <div style={{padding:'13px 20px',fontSize:11,fontWeight:700,color:'#7A7A7A',letterSpacing:'.06em',textTransform:'uppercase',textAlign:'center'}}>Others</div>
-            </div>
-            {COMPARE.map(([feat,us,them],i)=>(
-              <div key={i} className="compare-row">
-                <div style={{padding:'14px 20px',fontSize:13.5,color:'#3A3A3A'}}>{feat}</div>
-                <div style={{padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  {us===true?<span style={{color:'#16A34A',fontSize:17,fontWeight:700}}>✓</span>:us}
+              <div className="hero-kpi-grid">
+                <div className="hero-kpi">
+                  <p>Pipeline added</p>
+                  <h3>$412K</h3>
+                  <span>Last 30 days</span>
                 </div>
-                <div style={{padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  {them===false?<span style={{color:'#EF4444',fontSize:17,fontWeight:700}}>✕</span>:<span style={{color:'#D97706',fontSize:12,fontWeight:600}}>{them}</span>}
+                <div className="hero-kpi">
+                  <p>Qualified leads</p>
+                  <h3>1,284</h3>
+                  <span>Enriched + scored</span>
+                </div>
+                <div className="hero-kpi">
+                  <p>Reply rate</p>
+                  <h3>18.6%</h3>
+                  <span>Across workflows</span>
+                </div>
+                <div className="hero-kpi">
+                  <p>Meetings booked</p>
+                  <h3>23</h3>
+                  <span>This week</span>
                 </div>
               </div>
-            ))}
-          </div>
-          <div style={{marginTop:24}} className="reveal">
-            <Link to="/contact" className="btn-blue" style={{fontSize:14,padding:'11px 22px'}}>See the difference yourself →</Link>
-          </div>
-        </div>
-      </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section style={{background:'#F7F7F5',borderTop:'1px solid #E2E2E2',borderBottom:'1px solid #E2E2E2',padding:'72px 40px'}}>
-        <div style={{maxWidth:1280,margin:'0 auto'}}>
-          <div className="eyebrow reveal">Customer results</div>
-          <h2 className="reveal" style={{fontFamily:"'Instrument Serif',Georgia,serif",fontSize:'clamp(26px,3.5vw,40px)',fontWeight:400,letterSpacing:'-.03em',marginBottom:44}}>
-            Real companies.<br/><em style={{fontStyle:'italic',color:'#1B4FD8'}}>Real numbers.</em>
-          </h2>
-          <div className="grid-3" style={{gap:18}}>
-            {TESTIMONIALS.map((t,i)=>(
-              <div key={i} className={`tcard reveal d${i+1}`}>
-                <div className="tcard-bar"/>
-                <div style={{fontFamily:"'Instrument Serif',Georgia,serif",fontSize:52,lineHeight:.8,color:'#1B4FD8',marginBottom:14}}>"</div>
-                <p style={{fontSize:14,color:'#3A3A3A',lineHeight:1.75,marginBottom:18,fontStyle:'italic'}}>{t.q}</p>
-                <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'#F0FDF4',color:'#16A34A',border:'1px solid #BBF7D0',borderRadius:6,padding:'4px 11px',fontSize:12,fontWeight:700,marginBottom:18}}>↑ {t.metric}</div>
-                <div style={{display:'flex',alignItems:'center',gap:12,paddingTop:16,borderTop:'1px solid #E2E2E2'}}>
-                  <div style={{width:34,height:34,borderRadius:'50%',background:'#EEF2FF',border:'1px solid #C7D4FF',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,color:'#1B4FD8',flexShrink:0}}>{t.ini}</div>
+              <div className="hero-chart">
+                <div className="hero-chart-head">
                   <div>
-                    <div style={{fontSize:13,fontWeight:700,color:'#0A0A0A'}}>{t.name}</div>
-                    <div style={{fontSize:12,color:'#7A7A7A',marginTop:2}}>{t.role}</div>
+                    <small>Performance overview</small>
+                    <h4>Qualified pipeline trend</h4>
                   </div>
+                  <span className="hero-chart-badge">+40%</span>
+                </div>
+
+                <div className="hero-bars">
+                  <span style={{ height: '34%' }} />
+                  <span style={{ height: '44%' }} />
+                  <span style={{ height: '52%' }} />
+                  <span style={{ height: '65%' }} />
+                  <span style={{ height: '72%' }} />
+                  <span style={{ height: '86%' }} />
+                  <span style={{ height: '96%' }} />
+                </div>
+              </div>
+
+              {/* <div className="hero-floating-card hero-floating-card-a">
+                <span className="floating-label">New lead</span>
+                <strong>Score: 91 / 100</strong>
+                <p>Routed to high-intent sequence</p>
+              </div> */}
+
+              {/* <div className="hero-floating-card hero-floating-card-b">
+                <span className="floating-label">Automation</span>
+                <strong>Follow-up launched</strong>
+                <p>Email + LinkedIn touch active</p>
+              </div> */}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="logos-section">
+        <div className="section-container">
+          <div className="section-mini-head center">Trusted by modern revenue teams</div>
+          <div className="logos-marquee">
+            <div className="logos-track">
+              {[...LOGOS, ...LOGOS].map((logo, index) => (
+                <div key={index} className="logo-item">
+                  {logo}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="stats-section">
+        <div className="section-container stats-grid">
+          <StatCard value="500+" label="B2B teams" sub="using better GTM systems" />
+          <StatCard value="40%" label="Pipeline lift" sub="average improvement seen" />
+          <StatCard value="$50+" label="Revenue impact" sub="across supported accounts" />
+          <StatCard value="48h" label="Time to first launch" sub="for many setups" />
+        </div>
+      </section>
+
+      <section className="workflow-section">
+        <div className="section-container">
+          <div className="section-head reveal">
+            <div>
+              <div className="section-mini-head">Built into your workflow</div>
+              <h2 className="section-title">
+                One system for enrichment, qualification, routing, and action.
+              </h2>
+            </div>
+            <p className="section-copy">
+              Instead of adding another disconnected tool, we help build a revenue workflow
+              that moves leads from capture to conversion with more clarity and speed.
+            </p>
+          </div>
+
+          <WorkflowCanvas />
+        </div>
+      </section>
+
+      <section className="services-section">
+        <div className="section-container">
+          <div className="section-head reveal">
+            <div>
+              <div className="section-mini-head">What we build</div>
+              <h2 className="section-title">
+                Systems for GTM, RevOps, and outbound execution.
+              </h2>
+            </div>
+            <p className="section-copy">
+              We combine process thinking, automation, CRM structure, and AI workflow logic
+              to help your team generate better-fit pipeline with less manual friction.
+            </p>
+          </div>
+
+          <div className="services-grid">
+            {SERVICES.map((service, index) => (
+              <article key={index} className={`service-card reveal d${(index % 3) + 1}`}>
+                <div className="service-number">{service.num}</div>
+                <div className="service-tag">{service.tag}</div>
+                <h3>{service.title}</h3>
+                <p>{service.body}</p>
+                <Link to="/services" className="service-link">
+                  Learn more →
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="problems-section">
+        <div className="section-container">
+          <div className="section-head reveal">
+            <div>
+              <div className="section-mini-head">Why GTM breaks</div>
+              <h2 className="section-title">
+                Most growth problems are actually workflow problems.
+              </h2>
+            </div>
+            <p className="section-copy">
+              Poor lead handling, unclear routing, disconnected sales motions, and weak data
+              structure create pipeline problems long before performance dashboards reveal them.
+            </p>
+          </div>
+
+          <div className="problems-grid">
+            {PROBLEMS.map((item, index) => (
+              <article key={index} className={`problem-card reveal d${(index % 4) + 1}`}>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="process-section">
+        <div className="section-container">
+          <div className="section-head reveal">
+            <div>
+              <div className="section-mini-head">How we launch</div>
+              <h2 className="section-title">
+                A practical rollout designed for weeks, not months.
+              </h2>
+            </div>
+            <p className="section-copy">
+              The process is structured enough to move fast, but flexible enough to match
+              your CRM, targeting model, and sales workflow.
+            </p>
+          </div>
+
+          <div className="process-list">
+            {PROCESS.map((step, index) => (
+              <div key={index} className={`process-item reveal d${(index % 4) + 1}`}>
+                <div className="process-week">{step.week}</div>
+                <div className="process-content">
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
                 </div>
               </div>
             ))}
@@ -308,18 +802,118 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section style={{padding:'72px 40px'}}>
-        <div style={{maxWidth:1280,margin:'0 auto'}}>
-          <div className="cta-strip reveal">
+      <section className="compare-section">
+        <div className="section-container">
+          <div className="section-head reveal">
             <div>
-              <h2>Ready to build a<br/><em>predictable pipeline?</em></h2>
-              <p>Join 500+ B2B companies scaling with AIB2B Automation. Start free — no credit card, no lock-in.</p>
+              <div className="section-mini-head">Why AIB2B</div>
+              <h2 className="section-title">
+                Not another tool. A system your team can actually run.
+              </h2>
             </div>
-            <div className="cta-right">
-              <Link to="/contact" className="btn-white">Start free trial →</Link>
-              <Link to="/pricing" style={{color:'rgba(255,255,255,.45)',fontSize:14}}>View pricing first</Link>
-              <div style={{fontSize:12,color:'rgba(255,255,255,.28)',textAlign:'right'}}>14-day trial · No card · Live in 48h</div>
+            <p className="section-copy">
+              Most solutions solve one piece of the funnel. We focus on the operating system
+              that connects lead quality, action logic, CRM flow, and conversion visibility.
+            </p>
+          </div>
+
+          <div className="compare-table reveal">
+            <div className="compare-row compare-header">
+              <div>Capability</div>
+              <div>AIB2B</div>
+              <div>Typical alternative</div>
+            </div>
+
+            {COMPARE.map(([feature, ours, theirs], index) => (
+              <div className="compare-row" key={index}>
+                <div>{feature}</div>
+                <div className="compare-good">{ours}</div>
+                <div className="compare-neutral">{theirs}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="results-section">
+        <div className="section-container">
+          <div className="section-head reveal">
+            <div>
+              <div className="section-mini-head">Results</div>
+              <h2 className="section-title">
+                Better systems create better conversations and better pipeline.
+              </h2>
+            </div>
+            <p className="section-copy">
+              The value is not just automation. It is having a repeatable GTM system that
+              improves qualification quality, follow-up speed, and sales confidence.
+            </p>
+          </div>
+
+          <div className="results-grid">
+            {RESULTS.map((item, index) => (
+              <article key={index} className={`result-card reveal d${(index % 3) + 1}`}>
+                <div className="quote-mark">“</div>
+                <p className="result-text">{item.quote}</p>
+                <div className="result-metric">{item.metric}</div>
+                <footer className="result-footer">
+                  <div className="result-avatar">{item.initials}</div>
+                  <div>
+                    <strong>{item.name}</strong>
+                    <span>{item.role}</span>
+                  </div>
+                </footer>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="faq-section">
+        <div className="section-container faq-layout">
+          <div className="faq-left reveal">
+            <div className="section-mini-head">FAQ</div>
+            <h2 className="section-title">
+              Common questions before teams get started.
+            </h2>
+            <p className="section-copy left">
+              These are the questions we usually hear from founders, operators, and revenue teams
+              evaluating a workflow-led GTM system.
+            </p>
+          </div>
+
+          <div className="faq-list">
+            {FAQS.map((item, index) => (
+              <FAQItem
+                key={index}
+                item={item}
+                isOpen={openFaq === index}
+                onClick={() => setOpenFaq(openFaq === index ? -1 : index)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="cta-section">
+        <div className="section-container">
+          <div className="cta-card reveal">
+            <div className="cta-copy">
+              <div className="section-mini-head light">Book a 30-minute strategy call</div>
+              <h2>Turn lead chaos into a cleaner revenue system.</h2>
+              <p>
+                If your team needs better lead qualification, stronger outbound systems,
+                cleaner CRM flow, and more qualified pipeline, let’s map the right workflow.
+              </p>
+            </div>
+
+            <div className="cta-actions">
+              <Link to="/contact" className="btn btn-white">
+                Book your strategy call
+              </Link>
+              <Link to="/services" className="btn btn-outline-light">
+                Explore services
+              </Link>
             </div>
           </div>
         </div>
